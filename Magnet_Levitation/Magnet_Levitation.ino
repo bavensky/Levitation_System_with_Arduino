@@ -17,27 +17,28 @@
 #include <TimerOne.h>              // เรียกใช้ไลบรารี่ Timer1 
 
 #define hall        A3             // กำหนดต่อ Hall effect Sensor ที่ขา Analog 0
-#define magnetic     11            // กำหนดขาเอาต์พุตของขดลวดที่จะทำให้เป็นแม่เหล็ก
+#define magnetic     5            // กำหนดขาเอาต์พุตของขดลวดที่จะทำให้เป็นแม่เหล็ก เป็นขา PWM ของบอร์ด Arduino
 #define filter      0.4f           // กำหนดค่าเพื่อใช้ในสูตร Low-pass filter = for i from 1 to n เมื่อ y[i] := y[i-1] + α * (x[i] - y[i-1])       
 #define sampling    1000.0f        // กำหนดให้รอบการทำงานที่ 1 Khz
 
 float state = 0;                   // ตำแหน่งปัจจุบัน
 float prev_state = 0;              // ตำแหน่งก่อนหน้านี้  
-float ref = 6.6;                   // ตำแหน่งที่ต้องการให้ลอยอยู่
+float ref = 6.7;                   // ตำแหน่งที่ต้องการให้ลอยอยู่
 
 float error = 0;                   // ใช้สำหรับเก็บค่าส่วนต่างจากการเคลื่อนที่ของวัตถุปัจจุบัน
 float prev_error =0;               // ใช้สำหรับเก็บค่าส่วนต่างจากการเคลื่อนที่ของวัตถุก่อนหน้านี้
 float error_dot = 0;               // ใช้สำหรับเก็บค่าที่ผิดพลาด
 float error_sum =0;                // ใช้สำหรับเก็บค่าผมรวมที่ผิดพลาดในการทำงาน
 
-float kp = 515;                    // ค่า P (สปริง)
-float ki = 10;                     // ค่า I (ชดเชย)
-float kd = 3.35;                   // ค่า D (โช๊คอัพ)
+float kp = 400;                    // ค่า P (สปริง)
+float ki = 8;                     // ค่า I (ชดเชย)
+float kd = 3;                    // ค่า D (โช๊คอัพ)
 
 float output  = 0;                 // ค่าที่จะส่งออกไปให้ FET ทำงาน (เป็น PWM)
 
 void setup() 
 {
+  Serial.begin(115200);
   pinMode(hall, INPUT);            // ประกาศค่าให้ hall เป็นอินพุต
   pinMode(output, OUTPUT);         // ประกาศค่าให้ output เป็นเอาต์พุต
   
@@ -47,17 +48,17 @@ void setup()
 
 void loop() 
 {
-    delay(1000);                   // หน่วงเวลา 1 วินาที เพื่อให้สามารถดูค่าต่าง ๆ ได้ง่าย
-    Serial.print("state =");       // แสดงค่า ตำแหน่งปัจจุบันที่อ่านได้จาก Hall Effect Sensor
-    Serial.print(state);
-    Serial.print(" error=");       // แสดงค่าที่ผิดพลาดจากตำแหน่งปัจจุบันกับตำแหน่งก่อนหน้านี้
-    Serial.print(error);
-    Serial.print(" error_dot=");   // แสดงค่าที่ผิดพลาดเพื่อใช้สำหรับการคืนค่าให้อยู่ในตำแหน่งที่ต้องการ
-    Serial.print(error_dot);
-    Serial.print(" error_sum=");   // แสดงค่าที่ผิดพลาดสะสมที่เกิดจากการเออเรอร์ 
-    Serial.print(error_sum);
-    Serial.print(" output=");      // แสดงค่า PWM ที่ส่งออกไปควบคุม FET
-    Serial.println(output);
+//    delay(1000);                   // หน่วงเวลา 1 วินาที เพื่อให้สามารถดูค่าต่าง ๆ ได้ง่าย
+//    Serial.print("state =");       // แสดงค่า ตำแหน่งปัจจุบันที่อ่านได้จาก Hall Effect Sensor
+//    Serial.print(state);
+//    Serial.print(" error=");       // แสดงค่าที่ผิดพลาดจากตำแหน่งปัจจุบันกับตำแหน่งก่อนหน้านี้
+//    Serial.print(error);
+//    Serial.print(" error_dot=");   // แสดงค่าที่ผิดพลาดเพื่อใช้สำหรับการคืนค่าให้อยู่ในตำแหน่งที่ต้องการ
+//    Serial.print(error_dot);
+//    Serial.print(" error_sum=");   // แสดงค่าที่ผิดพลาดสะสมที่เกิดจากการเออเรอร์ 
+//    Serial.print(error_sum);
+//    Serial.print(" output=");      // แสดงค่า PWM ที่ส่งออกไปควบคุม FET
+//    Serial.println(output);
 }
 
 void PID(void) 
