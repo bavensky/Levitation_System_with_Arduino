@@ -68,7 +68,7 @@ void PID(void)
   
   state = prev_state + (filter*(((float)(analogRead(hall))/100.0f)-prev_state));    // ใช้สมการ Low pass filter ในการอ่านค่าจาก Hall Effect Sensor เพื่อเก็บค่าไว้ในตำแหน่งปัจจุบัน
     
-  prev_error = error;              // เก็บค่าผิดพลากก่อนหน้านี้
+  prev_error = error;              // เก็บค่าผิดพลาดก่อนหน้านี้
   error = ref - state;             // ตำแหน่งที่ต้องการ ลบกับ ตำแหน่งที่อ่านค่าได้ เก็บไว้ในตัวแปร error เช่นถ้า ref = 7 และ state = 5 ค่าผิดพลาดจะได้ท่ากับ 2 
   error_dot = (error - prev_error)*sampling;    // นำค่าผิดพลาด ลบกับ ค่าผิดพลากก่อนหน้านี้ แล้วคูณด้วยรอบการทำงาน เพื่อนำไปคูณกับค่า kd
   
